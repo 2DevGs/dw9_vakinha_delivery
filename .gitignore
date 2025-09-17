@@ -9,6 +9,8 @@
 .history
 .svn/
 migrate_working_dir/
+.env
+lib\app\core\config\env\env.g.dart
 
 # IntelliJ related
 *.iml
