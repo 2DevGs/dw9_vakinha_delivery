@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:dw9_vakinha_delivery/app/dto/order_product_dto.dart';
 
 import 'package:dw9_vakinha_delivery/app/repositories/products/products_repository.dart';
 
@@ -16,7 +17,6 @@ class HomeController extends Cubit<HomeState> {
   Future<void> loadProducts() async {
     emit(state.copyWith(status: HomeStateStatus.loading));
     try {
-      await Future.delayed(const Duration(seconds: 2));
       final products = await _productsRepository.findAllProducts();
       emit(
         state.copyWith(status: HomeStateStatus.loaded, products: products),
@@ -30,5 +30,24 @@ class HomeController extends Cubit<HomeState> {
         ),
       );
     }
+  }
+
+  void addOrUpdateBag(OrderProductDto orderProduct) {
+    final shoppingBag = [...state.shoppingBag];
+    final orderIndex = shoppingBag.indexWhere(
+      (orderP) => orderP.product == orderProduct.product,
+    );
+
+    if (orderIndex > -1) {
+      if (orderProduct.amount == 0) {
+        shoppingBag.removeAt(orderIndex);
+      } else {
+        shoppingBag[orderIndex] = orderProduct;
+      }
+    } else {
+      shoppingBag.add(orderProduct);
+    }
+
+    emit(state.copyWith(shoppingBag: shoppingBag));
   }
 }
