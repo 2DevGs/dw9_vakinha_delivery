@@ -7,7 +7,6 @@ import 'package:dw9_vakinha_delivery/app/dto/order_product_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShoppingBagWidget extends StatelessWidget {
-
   final List<OrderProductDto> bag;
 
   const ShoppingBagWidget({
@@ -18,19 +17,22 @@ class ShoppingBagWidget extends StatelessWidget {
   Future<void> _goOrder(BuildContext context) async {
     final navigator = Navigator.of(context);
     final sp = await SharedPreferences.getInstance();
-    if(!sp.containsKey('accessToken')){
+    if (!sp.containsKey('accessToken')) {
       //Envio para o login
       final loginResult = await navigator.pushNamed('/auth/login');
-      print(loginResult);
+      if (loginResult == null || loginResult == false) {
+        return;
+      }
     }
-      //Envio para o order
-    
+    //Envio para o order
+    await navigator.pushNamed('/order', arguments: bag);
   }
 
   @override
   Widget build(BuildContext context) {
-
-  final totalBag = bag.fold<double>(0.0, (total, element) => total += element.totalPrice).currencyPTBR;
+    final totalBag = bag
+        .fold<double>(0.0, (total, element) => total += element.totalPrice)
+        .currencyPTBR;
 
     return Container(
       width: context.screenWidth,
