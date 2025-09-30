@@ -1,15 +1,35 @@
+import 'dart:developer';
 
 import 'package:dw9_vakinha_delivery/app/dto/order_product_dto.dart';
+import 'package:dw9_vakinha_delivery/app/repositories/order/order_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'order_state.dart';
 
 class OrderController extends Cubit<OrderState> {
-  
-  OrderController() : super(const OrderState.initial());
+  final OrderRepository _orderRepository;
 
-  void load(List<OrderProductDto> products) {
-    emit(state.copyWith(orderProducts: products));
+  OrderController(this._orderRepository) : super(const OrderState.initial());
+
+  Future<void> load(List<OrderProductDto> products) async {
+    try {
+      emit(state.copyWith(status: OrderStatus.loading));
+      final paymentTypes = await _orderRepository.getAllPaymentsTypes();
+      emit(
+        state.copyWith(
+          orderProducts: products,
+          status: OrderStatus.loaded,
+          paymentTypes: paymentTypes,
+        ),
+      );
+    } catch (e, s) {
+      log('Erro ao carregar página', error: e, stackTrace: s);
+      emit(
+        state.copyWith(
+          status: OrderStatus.error,
+          errorMessage: 'Erro ao carregar página',
+        ),
+      );
+    }
   }
-  
 }
