@@ -1,31 +1,33 @@
 import 'package:dw9_vakinha_delivery/app/core/extensions/formatter_extension.dart';
 import 'package:dw9_vakinha_delivery/app/core/ui/helpers/size_extensions.dart';
 import 'package:dw9_vakinha_delivery/app/core/ui/styles/text_styles.dart';
+import 'package:dw9_vakinha_delivery/app/pages/home/home_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dw9_vakinha_delivery/app/dto/order_product_dto.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShoppingBagWidget extends StatelessWidget {
   final List<OrderProductDto> bag;
 
-  const ShoppingBagWidget({
+  ShoppingBagWidget({
     super.key,
     required this.bag,
   });
 
   Future<void> _goOrder(BuildContext context) async {
     final navigator = Navigator.of(context);
+    final controller = context.read<HomeController>();
     final sp = await SharedPreferences.getInstance();
     if (!sp.containsKey('accessToken')) {
-      //Envio para o login
       final loginResult = await navigator.pushNamed('/auth/login');
       if (loginResult == null || loginResult == false) {
         return;
       }
     }
-    //Envio para o order
-    await navigator.pushNamed('/order', arguments: bag);
+    final updateBag = await navigator.pushNamed('/order', arguments: bag);
+    controller.updateBag(updateBag as List<OrderProductDto>);
   }
 
   @override

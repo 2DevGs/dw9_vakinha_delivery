@@ -1,4 +1,5 @@
 import 'package:dw9_vakinha_delivery/app/pages/auth/login/login_router.dart';
+import 'package:dw9_vakinha_delivery/app/pages/order/order_completed_page.dart';
 import 'package:flutter/material.dart';
 
 import 'core/provider/application_binding.dart';
@@ -25,6 +26,7 @@ class Dw9DeliveryApp extends StatelessWidget {
           '/auth/login': (context) => LoginRouter.page,
           '/auth/register': (context) => RegisterRouter.page,
           '/order': (context) => OrderRouter.page,
+          '/order/completed': (context) => const OrderCompletedPage(),
         },
       ),
     );

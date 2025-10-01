@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:dw9_vakinha_delivery/app/core/exceptions/repository_exception.dart';
+import 'package:dw9_vakinha_delivery/app/dto/order_dto.dart';
 import 'package:dw9_vakinha_delivery/app/models/payment_type_model.dart';
 
 import '../../core/rest_client/custom_dio.dart';
@@ -22,6 +23,33 @@ class OrderRepositoryImpl implements OrderRepository {
     } on DioException catch (e, s) {
       log('Erro ao buscar formas de pagamento', error: e, stackTrace: s);
       throw RepositoryException(message: 'Erro ao buscar formas de pagamento');
+    }
+  }
+
+  @override
+  Future<void> saveOrder(OrderDto order) async {
+    try {
+      await dio.auth().post(
+        '/orders',
+        data: {
+          'products': order.products
+              .map(
+                (e) => {
+                  'id': e.product.id,
+                  'amount': e.amount,
+                  'total_price': e.totalPrice,
+                },
+              )
+              .toList(),
+          'user_id': '#userAuthRef',
+          'address': order.address,
+          'CPF': order.document,
+          'payment_method_id': order.paymentMethodId,
+        },
+      );
+    } on DioException catch (e, s) {
+      log('Erro ao registrar pedido', error: e, stackTrace: s);
+      throw RepositoryException(message: 'Erro ao registrar pedido');
     }
   }
 }
