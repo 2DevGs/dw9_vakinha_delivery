@@ -1,3 +1,4 @@
+import 'package:dw9_vakinha_delivery/app/core/global/global_context.dart';
 import 'package:dw9_vakinha_delivery/app/pages/auth/login/login_router.dart';
 import 'package:dw9_vakinha_delivery/app/pages/order/order_completed_page.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,12 @@ import 'pages/product_detail/product_detail_router.dart';
 import 'pages/splash/splash_page.dart';
 
 class Dw9DeliveryApp extends StatelessWidget {
-  const Dw9DeliveryApp({super.key});
+
+  final _navKey = GlobalKey<NavigatorState>();
+
+  Dw9DeliveryApp({super.key}) {
+    GlobalContext.i.navigatorKey = _navKey;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +25,7 @@ class Dw9DeliveryApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Vakinha Delivery',
         theme: ThemeConfig.theme,
+        navigatorKey: _navKey,
         routes: {
           '/': (context) => SplashPage(),
           '/home': (context) => HomeRouter.page,

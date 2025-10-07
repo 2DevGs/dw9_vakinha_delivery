@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dw9_vakinha_delivery/app/core/global/global_context.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -19,9 +20,7 @@ class AuthInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     if (err.response?.statusCode == 401) {
-      // Redirecionar usuário para tela de home
-      final sp = await SharedPreferences.getInstance();
-      sp.clear();
+      GlobalContext.i.loginExpire();      
       handler.next(err);
     } else {
       handler.next(err);
