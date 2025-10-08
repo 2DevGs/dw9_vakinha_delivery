@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ShoppingBagWidget extends StatelessWidget {
   final List<OrderProductDto> bag;
 
-  ShoppingBagWidget({
+  const ShoppingBagWidget({
     super.key,
     required this.bag,
   });

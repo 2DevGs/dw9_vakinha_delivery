@@ -116,8 +116,7 @@ class _OrderPageState extends BaseState<OrderPage, OrderController> {
         );
       },
       child: PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (didPop, _) async {
+        onPopInvokedWithResult: (_, __) async {
           Navigator.of(context).pop(controller.state.orderProducts);
         },
         child: Scaffold(
